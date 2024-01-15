@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "clientdomainsigner"
+version = "0.1.0"
+description = "a simple server side implementation of a client domain signer for the stellar sep-10 wallet example"
+authors = ["Christian Rogobete <c.rogobete@soneso.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+stellar-sdk = "^9.2.0"
+Werkzeug = "2.2.2"
+quart-cors = "^0.7.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
