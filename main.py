@@ -1,3 +1,4 @@
+import json
 import quart
 import quart_cors
 from quart import request
@@ -23,6 +24,11 @@ async def stellar_toml():
 @app.post("/sign")
 async def sign():
     try:
+        headers = quart.request.headers
+        bearer = headers.get('Authorization')    # Bearer token
+        if bearer is None or bearer.split()[1] != "123456789":
+            raise Exception("Unauthenticated")
+
         request = await quart.request.get_json(force=True)
         if "transaction" not in request:
             raise Exception("missing transaction parameter")
@@ -39,7 +45,12 @@ async def sign():
         secret = config['signing']['secret']
         kp = Keypair.from_secret(secret)
         transaction.sign(kp)
-        return quart.Response(response=transaction.to_xdr(), status=200)
+        
+        res = {}
+        res['transaction'] = transaction.to_xdr()
+        res['network_passphrase'] = network_passphrase
+    
+        return quart.Response(response=json.dumps(res), status=200)
     except Exception as e:
         return quart.Response(response=str(e), status=400)
 
